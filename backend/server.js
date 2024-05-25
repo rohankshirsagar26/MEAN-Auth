@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./db/db');
 const roleRouter = require('./routes/role');
 const userRouter = require('./routes/user');
+const responseHandler = require('./utils/helper');
 
 const app = express();
 
@@ -12,6 +13,8 @@ app.use(express.json());
 
 app.use('/api/v1/role', roleRouter);
 app.use('/api/v1/user', userRouter);
+
+app.use(responseHandler);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server started on ${process.env.PORT}`);
