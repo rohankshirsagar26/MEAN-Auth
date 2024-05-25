@@ -3,6 +3,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const createSuccess = require('../utils/success');
 const createError = require('../utils/error');
+const jwt = require('jsonwebtoken');
 
 const register = async (req, res, next) => {
     try {
@@ -24,7 +25,7 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
     try {
-        const user = await User.findOne({ email: req.body.email });
+        const user = await User.findOne({ email: req.body.email }).populate("roles", "role");
         if (!user) {
             return next(createError(404, 'User not found'));
         }
@@ -33,7 +34,13 @@ const login = async (req, res, next) => {
         if (!isPasswordCorrect) {
             return next(createError(404, 'Password is incorrect'));
         }
-        return next(createSuccess(true, 200, `${user.firstName} logged in successfully`, user));
+
+        const token = jwt.sign(
+            { _id: user._id, isAdmin: user.isAdmin, roles: user.roles },
+            process.env.JWT_SECRET
+        )
+
+        res.cookie("access_token", token, { httpOnly: true, maxAge: 9000000 }).status(200).send({ status: 200, message: "Login success", data: user })
     } catch (err) {
         return next(createError(500, err.messaage));
     }
