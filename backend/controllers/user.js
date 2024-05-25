@@ -1,6 +1,7 @@
 const Role = require('../models/Role');
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const createSuccess = require('../utils/success');
 
 const register = async (req, res, next) => {
     try {
@@ -14,7 +15,7 @@ const register = async (req, res, next) => {
         const newUser = await User({ firstName, lastName, username, email, password: hashPassword, roles: role });
 
         await newUser.save()
-        return res.status(200).send('User registered successfully');
+        return next(createSuccess(true, 201, `${newUser.firstName} registered successfully`, newUser));
     } catch (err) {
         return res.status(500).send(err.message)
     }
@@ -31,8 +32,7 @@ const login = async (req, res, next) => {
         if (!isPasswordCorrect) {
             return res.status(404).send('Password is incorrect');
         }
-
-        return res.status(200).send('Logged in successfully');
+        return next(createSuccess(true, 200, `${user.firstName} logged in successfully`, user));
     } catch (error) {
         res.status(500).send(error.message);
     }
