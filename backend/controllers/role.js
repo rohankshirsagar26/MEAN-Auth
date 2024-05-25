@@ -1,15 +1,17 @@
 const Role = require("../models/Role");
+const createError = require("../utils/error");
+const createSuccess = require("../utils/success");
 
 const getAllRoles = async (req, res, next) => {
     try {
         const roles = await Role.find({});
         if (roles.length > 0) {
-            return res.status(200).send(roles);
+            return next(createSuccess(true, 200, 'All roles fetched successfully', roles));
         } else {
-            return res.status(404).send('Roles not found');
+            return next(createError(404, 'Roles not found'));
         }
     } catch (err) {
-        return res.status(500).send('Internal Server Error');
+        return next(createError(500, err.message));
     }
 }
 
@@ -19,24 +21,24 @@ const getRole = async (req, res, next) => {
         if (role) {
             return res.status(200).send(role);
         } else {
-            return res.status(404).send('Role not found');
+            return next(createError(404, 'Role not found'));
         }
     } catch (err) {
-        return res.status(500).send('Internal Server Error');
+        return next(createError(500, err.message));
     }
 }
 
 const createRole = async (req, res, next) => {
     try {
-        if (req.body.role && req.body.role !== '') {
-            const newRole = new Role(req.body);
+        if (req.body.type && req.body.type !== '') {
+            const newRole = new Role({ role: req.body.type });
             await newRole.save();
-            return res.status(201).send('Role created successfully');
+            return next(createSuccess(true, 201, `Role ${newRole.role} created successfully`, newRole));
         } else {
-            return res.status(400).send('Bad request');
+            return next(createError(500, 'Bad request'));
         }
     } catch (err) {
-        return res.status(500).send('Internal Server Error');
+        return next(createError(500, err.message));
     }
 
 }
@@ -45,13 +47,13 @@ const updateRole = async (req, res, next) => {
     try {
         const role = await Role.findById({ _id: req.params.id });
         if (role) {
-            const updatedRole = await Role.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true })
-            return res.status(200).send('Role updated successfully');
+            const updatedRole = await Role.findOneAndUpdate({ _id: req.params.id }, { $set: req.body });
+            return next(createSuccess(true, 201, `Role ${role.role} updated to ${req.body.role} successfully`, updatedRole));
         } else {
-            return res.status(400).send('Role not found');
+            return next(createError(404, 'Role not found'));
         }
-    } catch (error) {
-        return res.status(500).send('Internal Server Error');
+    } catch (err) {
+        return next(createError(500, err.message));
     }
 }
 
@@ -60,13 +62,13 @@ const deleteRole = async (req, res, next) => {
         const role = await Role.findById({ _id: req.params.id });
         if (role) {
             await Role.findOneAndDelete({ _id: req.params.id })
-            res.status(200).send('Role deleted successfully')
+            return next(createSuccess(true, 200, `Role ${role.role} deleted successfully`, role));
         } else {
-            res.status(404).send('Role not found');
+            return next(createError(404, 'Role not found'));
         }
 
-    } catch (error) {
-        return res.status(500).send('Internal Server Error');
+    } catch (err) {
+        return next(createError(500, err.message));
     }
 
 }
