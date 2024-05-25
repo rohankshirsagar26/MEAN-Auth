@@ -30,8 +30,8 @@ const getRole = async (req, res, next) => {
 
 const createRole = async (req, res, next) => {
     try {
-        if (req.body.type && req.body.type !== '') {
-            const newRole = new Role({ role: req.body.type });
+        if (req.body.role && req.body.role !== '') {
+            const newRole = new Role({ role: req.body.role });
             await newRole.save();
             return next(createSuccess(true, 201, `Role ${newRole.role} created successfully`, newRole));
         } else {

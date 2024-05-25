@@ -15,7 +15,6 @@ const register = async (req, res, next) => {
         const hashPassword = await bcrypt.hash(password, salt);
 
         const newUser = await User({ firstName, lastName, username, email, password: hashPassword, roles: role });
-
         await newUser.save()
         return next(createSuccess(true, 201, `${newUser.firstName} registered successfully`, newUser));
     } catch (err) {
@@ -46,4 +45,22 @@ const login = async (req, res, next) => {
     }
 }
 
-module.exports = { register, login }
+const registerAdmin = async (req, res, next) => {
+    try {
+        const { firstName, lastName, username, email, password } = req.body;
+
+        const role = await Role.find({});
+
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(password, salt);
+
+        const admin = new User({ firstName, lastName, username, email, password: hashPassword, isAdmin: true, roles: role });
+
+        await admin.save();
+        return next(createSuccess(true, 201, 'Admin registration successful'), admin)
+    } catch (err) {
+        return next(createError(500, err.messaage));
+    }
+}
+
+module.exports = { register, login, registerAdmin }
