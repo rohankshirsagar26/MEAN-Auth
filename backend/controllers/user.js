@@ -2,7 +2,7 @@ const Role = require('../models/Role');
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
-const registerUser = async (req, res, next) => {
+const register = async (req, res, next) => {
     try {
         const { firstName, lastName, username, email, password } = req.body
 
@@ -20,4 +20,22 @@ const registerUser = async (req, res, next) => {
     }
 }
 
-module.exports = { registerUser }
+const login = async (req, res, next) => {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(404).send('Password is incorrect');
+        }
+
+        return res.status(200).send('Logged in successfully');
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+module.exports = { register, login }
