@@ -5,7 +5,6 @@ const createSuccess = require("../utils/success");
 const getAllUsers = async (req, res, next) => {
     try {
         const users = await User.find({});
-
         if (users) {
             return next(createSuccess(true, 200, `All users fetched successfully`, users));
         } else {

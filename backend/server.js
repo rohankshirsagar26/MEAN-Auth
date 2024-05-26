@@ -6,11 +6,13 @@ const roleRouter = require('./routes/role');
 const authRouter = require('./routes/auth');
 const responseHandler = require('./utils/helper');
 const userRouter = require('./routes/user');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/v1/role', roleRouter);
 app.use('/api/v1/auth', authRouter);
