@@ -10,6 +10,7 @@ import { ForgetPasswordComponent } from './pages/forget-password/forget-password
 import { HomeComponent } from './pages/home/home.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,13 +21,10 @@ import { FooterComponent } from './components/footer/footer.component';
     ForgetPasswordComponent,
     HomeComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
