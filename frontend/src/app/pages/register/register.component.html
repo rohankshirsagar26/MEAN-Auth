@@ -104,6 +104,13 @@
         "
         >*Confirm password is required</span
       >
+      <span
+        class="text-red-500"
+        *ngIf="
+          registerForm.hasError('confirmPasswordValidator', 'confirmPassword')
+        "
+        >*Password didn't match</span
+      >
     </div>
 
     <button

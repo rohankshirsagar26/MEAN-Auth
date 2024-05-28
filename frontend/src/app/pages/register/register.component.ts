@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { confirmPasswordValidator } from 'src/app/validators/confirm-password.validator';
 
 @Component({
   selector: 'app-register',
@@ -12,14 +13,22 @@ export class RegisterComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.registerForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', Validators.compose([Validators.email, Validators.required])],
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
-    });
+    this.registerForm = this.fb.group(
+      {
+        firstName: ['', Validators.required],
+        lastName: ['', Validators.required],
+        email: [
+          '',
+          Validators.compose([Validators.email, Validators.required]),
+        ],
+        username: ['', Validators.required],
+        password: ['', Validators.required],
+        confirmPassword: ['', Validators.required],
+      },
+      {
+        validator: confirmPasswordValidator('password', 'confirmPassword'),
+      }
+    );
   }
 
   register() {
