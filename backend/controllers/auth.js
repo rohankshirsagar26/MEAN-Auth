@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const createSuccess = require('../utils/success');
 const createError = require('../utils/error');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const Token = require('../models/UserToken');
 
 const register = async (req, res, next) => {
     try {
@@ -63,4 +65,65 @@ const registerAdmin = async (req, res, next) => {
     }
 }
 
-module.exports = { register, login, registerAdmin }
+const sendEmail = async (req, res, next) => {
+    const email = req.body.email;
+    const user = await User.findOne({ email: { $regex: '^' + email + '$', $options: 'i' } });
+
+    if (!user) {
+        return next(createError(404, 'User not found'));
+    }
+
+    const payload = { email: user.email };
+    const expiryTime = 300;
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: expiryTime })
+
+    const newToken = new Token({
+        userId: user._id,
+        token
+    })
+
+    const mailTransporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'technologiesmayura@gmail.com',
+            pass: 'rcqx jzku auzk lahv'
+        }
+    })
+
+    const mailDetails = {
+        from: 'technologiesmayura@gmail.com',
+        to: email,
+        subject: 'Reset Password',
+        html: `
+            <html>
+                <head>
+                    <title>Password Reset</title>
+                </head>
+                <body>
+                    <h1>Reset Password Request</h1>
+                    <p>Dear ${user.firstName}</p>
+                    <p>We have received a request to reset your password for your account with BookMyBook. To complete the password reset process, please click on the button below:</p>
+                    <a href="${process.env.LIVE_URL}/reset/${token}">
+                        <button style="background-color: #4CAF50; color: white; padding: 14px 20px; border: none; cursor: pointer; border-radius: 4px;">Reset Password</button>
+                    </a>
+                    <p>Please note that this link is valid only for 5 minutes. If you did not request password reset, please disregard this message.</p>
+                    <p>Thank you,</p>
+                    <p>Mayura Technologies</p>
+                </body>
+            </html>
+        `
+    }
+
+    mailTransporter.sendMail(mailDetails, async (error, data) => {
+        if (error) {
+            console.log(error);
+            return next(createError(500, error.message));
+        } else {
+            await newToken.save();
+            return next(createSuccess(true, 200, 'Password reset mail sent successfully'));
+        }
+    })
+}
+
+module.exports = { register, login, registerAdmin, sendEmail }
