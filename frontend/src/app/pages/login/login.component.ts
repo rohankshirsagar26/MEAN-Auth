@@ -23,4 +23,19 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required],
     });
   }
+
+  login() {
+    this.auth.login(this.loginForm.value).subscribe({
+      next: (res) => {
+        alert(
+          `${res.data.firstName} ${res.data.lastName} logged in successfully`
+        );
+        this.loginForm.reset();
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        alert(err.message);
+      },
+    });
+  }
 }
