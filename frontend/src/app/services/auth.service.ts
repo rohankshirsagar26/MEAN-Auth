@@ -14,4 +14,8 @@ export class AuthService {
       registerObj
     );
   }
+
+  login(loginObj: any) {
+    return this.http.post<any>(`${apiUrls.authServiceApi}/login`, loginObj);
+  }
 }
