@@ -9,6 +9,9 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   register(registerObj: any) {
-    return this.http.post<any>(`${apiUrls.authServiceApi}/login`, registerObj);
+    return this.http.post<any>(
+      `${apiUrls.authServiceApi}/register`,
+      registerObj
+    );
   }
 }

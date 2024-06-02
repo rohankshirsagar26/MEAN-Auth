@@ -35,7 +35,9 @@ export class RegisterComponent implements OnInit {
   register() {
     this.auth.register(this.registrationForm.value).subscribe({
       next: (res) => {
-        alert(`${res.firstName} ${res.lastName} registered successfully`);
+        alert(
+          `${res.data.firstName} ${res.data.lastName} registered successfully`
+        );
       },
       error: (err) => {
         alert(err.message);
