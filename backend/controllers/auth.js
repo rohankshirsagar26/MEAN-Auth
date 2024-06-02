@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const createSuccess = require('../utils/success');
 const createError = require('../utils/error');
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config();
 const nodemailer = require('nodemailer');
 const Token = require('../models/UserToken');
 
