@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { confirmPasswordValidator } from 'src/app/validators/confirm-password.validator';
 
@@ -11,7 +12,11 @@ import { confirmPasswordValidator } from 'src/app/validators/confirm-password.va
 export class RegisterComponent implements OnInit {
   registrationForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private auth: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.registrationForm = this.fb.group(
@@ -38,6 +43,8 @@ export class RegisterComponent implements OnInit {
         alert(
           `${res.data.firstName} ${res.data.lastName} registered successfully`
         );
+        this.registrationForm.reset();
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         alert(err.message);
