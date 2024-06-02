@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth.service';
 import { confirmPasswordValidator } from 'src/app/validators/confirm-password.validator';
 
 @Component({
@@ -8,12 +9,12 @@ import { confirmPasswordValidator } from 'src/app/validators/confirm-password.va
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-  registerForm!: FormGroup;
+  registrationForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private auth: AuthService) {}
 
   ngOnInit(): void {
-    this.registerForm = this.fb.group(
+    this.registrationForm = this.fb.group(
       {
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
@@ -32,6 +33,13 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    console.log(this.registerForm.value);
+    this.auth.register(this.registrationForm.value).subscribe({
+      next: (res) => {
+        alert(`${res.firstName} ${res.lastName} registered successfully`);
+      },
+      error: (err) => {
+        alert(err.message);
+      },
+    });
   }
 }
