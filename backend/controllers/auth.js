@@ -66,7 +66,7 @@ const registerAdmin = async (req, res, next) => {
     }
 }
 
-const sendEmail = async (req, res, next) => {
+const resetPassword = async (req, res, next) => {
     const email = req.body.email;
     const user = await User.findOne({ email: { $regex: '^' + email + '$', $options: 'i' } });
 
@@ -127,4 +127,4 @@ const sendEmail = async (req, res, next) => {
     })
 }
 
-module.exports = { register, login, registerAdmin, sendEmail }
+module.exports = { register, login, registerAdmin, resetPassword }
