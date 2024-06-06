@@ -1,1 +1,56 @@
-<p>reset works!</p>
+<div class="lg:w-3/12 px-4 py-2 mt-32 shadow-lg mx-auto border">
+  <h3 class="text-3xl text-center font-semibold py-2">
+    Please use strong password
+  </h3>
+  <form [formGroup]="resetForm" class="flex flex-col">
+    <div class="flex flex-col mt-4 mb-1">
+      <input
+        formControlName="password"
+        type="password"
+        placeholder="Password"
+        class="p-2 border border-gray-200 rounded"
+      />
+      <span
+        class="text-red-500"
+        *ngIf="
+          resetForm.hasError('required', 'password') &&
+          resetForm.controls['password'].dirty
+        "
+        >*Password is required</span
+      >
+    </div>
+
+    <div class="flex flex-col mt-4 mb-1">
+      <input
+        formControlName="confirmPassword"
+        type="password"
+        placeholder="Confirm password"
+        class="p-2 border border-gray-200 rounded"
+      />
+      <span
+        class="text-red-500"
+        *ngIf="
+          resetForm.hasError('required', 'confirmPassword') &&
+          resetForm.controls['confirmPassword'].dirty
+        "
+        >*Confirm password is required</span
+      >
+      <span
+        class="text-red-500"
+        *ngIf="
+          resetForm.hasError('confirmPasswordValidator', 'confirmPassword')
+        "
+        >*Password didn't match</span
+      >
+    </div>
+
+    <button
+      [disabled]="resetForm.invalid"
+      [class.disabled]="resetForm.invalid"
+      class="bg-indigo-500 p-2 mt-3 rounded text-white"
+      (click)="resetPassword()"
+    >
+      Register
+    </button>
+  </form>
+</div>
