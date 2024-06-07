@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -14,7 +15,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -27,14 +29,15 @@ export class LoginComponent implements OnInit {
   login() {
     this.auth.login(this.loginForm.value).subscribe({
       next: (res) => {
-        alert(
-          `${res.data.firstName} ${res.data.lastName} logged in successfully`
+        this.toastr.success(
+          `${res.data.firstName} logged in successfully`,
+          'Success'
         );
         this.loginForm.reset();
         this.router.navigate(['/home']);
       },
       error: (err) => {
-        alert(err.message);
+        this.toastr.error('Unable to login', 'Error');
       },
     });
   }

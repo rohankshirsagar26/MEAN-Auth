@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 import { confirmPasswordValidator } from 'src/app/validators/confirm-password.validator';
 
@@ -15,7 +16,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -40,14 +42,15 @@ export class RegisterComponent implements OnInit {
   register() {
     this.auth.register(this.registrationForm.value).subscribe({
       next: (res) => {
-        alert(
-          `${res.data.firstName} ${res.data.lastName} registered successfully`
+        this.toastr.success(
+          `${res.data.firstName} ${res.data.lastName} registered successfully`,
+          'Success'
         );
         this.registrationForm.reset();
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        alert(err.message);
+        this.toastr.error('Unable to register the user', 'Error');
       },
     });
   }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -10,7 +11,11 @@ import { AuthService } from 'src/app/services/auth.service';
 export class ForgetPasswordComponent implements OnInit {
   forgetForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.forgetForm = this.fb.group({
@@ -21,12 +26,13 @@ export class ForgetPasswordComponent implements OnInit {
   sendEmail() {
     this.authService.sendEmail(this.forgetForm.value).subscribe({
       next: () => {
-        alert(
-          `Reset password email sent to ${this.forgetForm.value.email} successfully`
+        this.toastr.success(
+          `Reset password email sent to ${this.forgetForm.value.email} successfully`,
+          'Success'
         );
       },
       error: (err) => {
-        alert(err.message);
+        this.toastr.error('Unable to send reset password email', 'Error');
       },
     });
   }
