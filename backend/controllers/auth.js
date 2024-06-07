@@ -127,4 +127,31 @@ const sendEmail = async (req, res, next) => {
     })
 }
 
-module.exports = { register, login, registerAdmin, sendEmail }
+const resetPassword = (req, res, next) => {
+    const { token, password } = req.body;
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err, data) => {
+        if (err) {
+            return next(createError(500, err.message));
+        } else {
+            const response = data;
+            const user = await User.findOne({ email: { $regex: '^' + response.email + '$', $options: 'i' } });
+
+            const encryptedPassword = await bcrypt.hash(password, 10);
+            user.password = encryptedPassword;
+
+            try {
+                const updatedUser = await User.findOneAndUpdate(
+                    { _id: user._id },
+                    { $set: user },
+                    { new: true }
+                )
+                return next(createSuccess(true, 201, 'Password reset successfully', updatedUser))
+            } catch (error) {
+                return next(createError(500, error.message));
+            }
+        }
+    })
+}
+
+module.exports = { register, login, registerAdmin, sendEmail, resetPassword }
