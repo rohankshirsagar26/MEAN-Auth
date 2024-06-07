@@ -29,6 +29,8 @@ export class LoginComponent implements OnInit {
   login() {
     this.auth.login(this.loginForm.value).subscribe({
       next: (res) => {
+        localStorage.setItem('userId', res.data._id);
+        this.auth.isLoggedIn$.next(true);
         this.toastr.success(
           `${res.data.firstName} logged in successfully`,
           'Success'
