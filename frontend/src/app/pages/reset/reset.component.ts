@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/services/auth.service';
 import { confirmPasswordValidator } from 'src/app/validators/confirm-password.validator';
 
 @Component({
@@ -15,7 +17,9 @@ export class ResetComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authSerivce: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +39,18 @@ export class ResetComponent implements OnInit {
   }
 
   resetPassword() {
-    console.log(this.resetForm.value);
+    const resetObject = {
+      token: this.token,
+      password: this.resetForm.value.password,
+    };
+    this.authSerivce.resetPassword(resetObject).subscribe({
+      next: () => {
+        this.toastr.success(`Password reset successful`, 'Success');
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        this.toastr.error('Unable to reset password', 'Error');
+      },
+    });
   }
 }

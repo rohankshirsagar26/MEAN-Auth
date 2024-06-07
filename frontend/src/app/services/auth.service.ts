@@ -22,4 +22,11 @@ export class AuthService {
   sendEmail(email: string) {
     return this.http.post<any>(`${apiUrls.authServiceApi}/send-email`, email);
   }
+
+  resetPassword(resetObj: any) {
+    return this.http.post<any>(
+      `${apiUrls.authServiceApi}/reset-password`,
+      resetObj
+    );
+  }
 }
