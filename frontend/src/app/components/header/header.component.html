@@ -6,7 +6,7 @@
       >BookMyBook</span
     >
   </div>
-  <div class="search relative">
+  <div class="search relative" *ngIf="isLoggedIn">
     <input
       type="text"
       placeholder="Search book"
@@ -20,26 +20,32 @@
   </div>
   <div class="nav-items">
     <span
+      *ngIf="!isLoggedIn"
       class="text-xl cursor-pointer text-gray-200 font-bold m-3 hover:underline hover:text-indigo-300"
       routerLink="login"
       >Login</span
     >
     <span
+      *ngIf="!isLoggedIn"
       class="text-xl cursor-pointer text-gray-200 font-bold m-3 hover:underline hover:text-indigo-300"
       routerLink="register"
       >Register</span
     >
     <span
+      *ngIf="isLoggedIn"
       class="text-xl cursor-pointer text-gray-200 font-bold m-3 hover:underline hover:text-indigo-300"
       >Cart</span
     >
     <span
+      *ngIf="isLoggedIn"
       class="text-xl cursor-pointer text-gray-200 font-bold m-3 hover:underline hover:text-indigo-300"
       >Welcome User</span
     >
     <span
+      *ngIf="isLoggedIn"
       class="text-xl cursor-pointer text-gray-200 font-bold m-3 hover:underline hover:text-indigo-300"
       routerLink="login"
+      (click)="logout()"
       >Logout</span
     >
   </div>
