@@ -18,4 +18,8 @@ export class AuthService {
   login(loginObj: any) {
     return this.http.post<any>(`${apiUrls.authServiceApi}/login`, loginObj);
   }
+
+  sendEmail(email: string) {
+    return this.http.post<any>(`${apiUrls.authServiceApi}/send-email`, email);
+  }
 }
