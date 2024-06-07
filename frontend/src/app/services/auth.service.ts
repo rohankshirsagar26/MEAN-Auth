@@ -1,11 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { apiUrls } from '../constants/api.urls';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  isLoggedIn$ = new BehaviorSubject<boolean>(false);
+
   constructor(private http: HttpClient) {}
 
   register(registerObj: any) {
@@ -28,5 +31,9 @@ export class AuthService {
       `${apiUrls.authServiceApi}/reset-password`,
       resetObj
     );
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('userId');
   }
 }
