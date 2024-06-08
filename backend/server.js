@@ -7,6 +7,7 @@ const authRouter = require('./routes/auth');
 const responseHandler = require('./utils/helper');
 const userRouter = require('./routes/user');
 const cookieParser = require('cookie-parser');
+const booksRouter = require('./routes/book');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cookieParser());
 app.use('/api/v1/role', roleRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
+app.use('/api/v1/books', booksRouter);
 
 app.use(responseHandler);
 
