@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { apiUrls } from '../constants/api.urls';
 
 @Injectable({
@@ -9,7 +8,7 @@ import { apiUrls } from '../constants/api.urls';
 export class BookService {
   constructor(private http: HttpClient) {}
 
-  getAllBooks(): Observable<any[]> {
+  getAllBooks() {
     return this.http.get<any>(`${apiUrls.bookServiceApi}`);
   }
 }

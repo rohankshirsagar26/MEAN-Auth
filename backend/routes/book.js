@@ -4,6 +4,6 @@ const { verifyUser } = require('../utils/verifyToken');
 
 const booksRouter = express.Router();
 
-booksRouter.get('/', verifyUser, getAllBooks);
+booksRouter.get('/', getAllBooks);
 
 module.exports = booksRouter;
