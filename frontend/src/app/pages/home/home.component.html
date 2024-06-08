@@ -1,3 +1,8 @@
-<h4 class="text-4xl text-center mt-10 font-bold text-indigo-500">
+<div class="bookmybook text-4xl font-bold text-indigo-500 fixed z-10">
   Welcome to BookMyBook
-</h4>
+</div>
+<div class="container flex gap-x-4 mt-20">
+  <ng-container *ngFor="let book of books">
+    <app-book-card [book]="book" class="mt-20"></app-book-card>
+  </ng-container>
+</div>
