@@ -32,7 +32,7 @@ export class ForgetPasswordComponent implements OnInit {
         );
       },
       error: (err) => {
-        this.toastr.error('Unable to send reset password email', 'Error');
+        this.toastr.error(err.error.message, 'Error');
       },
     });
   }

@@ -49,7 +49,7 @@ export class ResetComponent implements OnInit {
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        this.toastr.error('Unable to reset password', 'Error');
+        this.toastr.error(err.error.message, 'Error');
       },
     });
   }

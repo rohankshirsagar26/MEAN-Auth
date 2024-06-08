@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        this.toastr.error('Unable to register the user', 'Error');
+        this.toastr.error(err.error.message, 'Error');
       },
     });
   }
